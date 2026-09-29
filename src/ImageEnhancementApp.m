@@ -8,8 +8,6 @@ classdef ImageEnhancementApp < handle
     %   3. Histogram Specification / Matching  (custom, tanpa imhistmatch)
     %   4. Image Filtering dengan Masking (Averaging, Gaussian, Sharpening, Median)
     %      - semua diimplementasikan sendiri, tanpa imfilter/medfilt2
-    %
-    % Fungsi custom yang digunakan:  myHist.m, imgFeatures.m
 
     properties (Access = private)
         Fig; MainGrid
@@ -486,6 +484,7 @@ classdef ImageEnhancementApp < handle
                 'Simpan Citra Hasil','enhanced_result.png');
             if isequal(f,0), return; end
             try
+                % Write raw pixel matrix — no axes/title included
                 imwrite(app.EnhancedImage, fullfile(p,f));
                 app.setStatus(['Tersimpan: ' f],'ok');
             catch ME
@@ -566,7 +565,6 @@ classdef ImageEnhancementApp < handle
             I = app.EnhancedImage;
             cla(app.AxEnhImg);
             imshow(I,'Parent',app.AxEnhImg);
-            title(app.AxEnhImg,'Citra Hasil Enhancement','Color','w','FontSize',10);
             app.plotHistogram(app.AxEnhHist, I, 'Histogram Hasil');
             app.updateFeatLabel(app.FeatEnhLabel, I);
         end

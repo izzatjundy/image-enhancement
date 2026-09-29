@@ -11,14 +11,14 @@ else % Citra RGB
     V_uint8 = uint8(round(hsv(:,:,3) * 255.0));
     V_match = matchSingleChannel(V_uint8, h_target);
     hsv(:,:,3) = double(V_match) / 255.0;
-    J = im2uint8(hsv2rgb(hsv));
+    J = uint8(round(hsv2rgb(hsv) * 255));
 end
 
 end
 
 % Histogram Matching using Inverse CDF
 function Out = matchSingleChannel(In, targetHist)
-h_in = myHist(In)
+h_in = myHist(In);
 cdf_in = cumsum(h_in(:,1)) / numel(In);
 
 cdf_target = cumsum(targetHist(:,1)) / sum(targetHist(:,1));
@@ -30,7 +30,7 @@ for k = 1:256
     lut(k) = uint8(minIdx - 1);
 end
 
-Out = lut(double(In) + 1)
+Out = lut(double(In) + 1);
 end
 
 % Create Target Histogram
@@ -70,7 +70,7 @@ switch specType
 end
 
 if sum(h_target) == 0
-    h_target(:) = 1
+    h_target(:) = 1;
 end
 
 end

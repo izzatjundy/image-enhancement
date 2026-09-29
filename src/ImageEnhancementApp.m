@@ -36,7 +36,7 @@ classdef ImageEnhancementApp < handle
         end
     end
 
-    %% ---- UI Construction -----------------------------------------------
+    %% UI Construction
     methods (Access = private)
 
         function buildUI(app)
@@ -193,9 +193,9 @@ classdef ImageEnhancementApp < handle
             g.RowSpacing    = 10;
             g.BackgroundColor = [0.16 0.16 0.20];
 
-            app.AxInputImg  = makeAxes(g, 1, 1, 'Citra Masukan');
+            app.AxInputImg  = makeAxes(g, 1, 1, '');
             app.AxInputHist = makeAxes(g, 1, 2, 'Histogram Masukan');
-            app.AxEnhImg    = makeAxes(g, 2, 1, 'Citra Hasil Enhancement');
+            app.AxEnhImg    = makeAxes(g, 2, 1, '');
             app.AxEnhHist   = makeAxes(g, 2, 2, 'Histogram Hasil Enhancement');
         end
 
@@ -350,7 +350,7 @@ classdef ImageEnhancementApp < handle
             d = d([d.isdir] & ~startsWith({d.name},'.'));
             subNames = {d.name};
             % Subfolders first (folder 1 is default), Browse at the end
-            items = [subNames, {'[Browse...] Pilih folder lain'}];
+            items = [subNames, {'Browse other folders...'}];
             app.FolderDropdown.Items = items;
             app.onFolderChanged();
         end
@@ -396,7 +396,7 @@ classdef ImageEnhancementApp < handle
             fpath = fullfile(app.CurrentFolderPath, file);
             try
                 img = imread(fpath);
-                if ~isa(img,'uint8'), img = im2uint8(img); end
+                if ~isa(img,'uint8'), img = uint8(round(double(img) / double(max(img(:))) * 255)); end
                 app.InputImage    = img;
                 app.EnhancedImage = [];
                 app.displayInputImage();
@@ -413,7 +413,7 @@ classdef ImageEnhancementApp < handle
             if isequal(f,0), return; end
             try
                 ref = imread(fullfile(p,f));
-                if ~isa(ref,'uint8'), ref = im2uint8(ref); end
+                if ~isa(ref,'uint8'), ref = uint8(round(double(ref) / double(max(ref(:))) * 255)); end
                 app.ReferenceImage = ref;
                 app.setStatus(['Referensi dimuat: ' f],'ok');
             catch ME
@@ -631,7 +631,7 @@ classdef ImageEnhancementApp < handle
 end
 
 
-%% ====== Module-level GUI helpers (bukan logika pemrosesan) ==============
+%% ====== Module-level GUI helpers ==============
 
 function ax = makeAxes(parent, row, col, ttl)
     ax = uiaxes(parent);

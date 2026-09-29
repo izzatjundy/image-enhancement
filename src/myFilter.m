@@ -28,23 +28,23 @@ imageFilteredDouble = zeros(rows, cols, chans); % output size = original size
 
 switch filterType
     case "Averaging"
-        % uniform mean kernel
+
         for chan = 1:chans
             for i = (1+padding):(rows+padding)
                 for j = (1+padding):(cols+padding)
-                    sum = 0;
+                    total = 0;
                     for k = 1:kernelSize
                         for l = 1:kernelSize
-                            sum = sum + imagePaddedDouble(i-padding+k-1, j-padding+l-1, chan);
+                            total = total + imagePaddedDouble(i-padding+k-1, j-padding+l-1, chan);
                         end
                     end
-                    imageFilteredDouble(i-padding, j-padding, chan) = sum / (kernelSize^2);
+                    imageFilteredDouble(i-padding, j-padding, chan) = total / (kernelSize^2);
                 end
             end
         end
 
     case "Gaussian"
-        % build Gaussian kernel
+
         sigma = sigmaValue;
         gKernel = zeros(kernelSize, kernelSize);
         center = padding + 1;
@@ -60,13 +60,13 @@ switch filterType
         for chan = 1:chans
             for i = (1+padding):(rows+padding)
                 for j = (1+padding):(cols+padding)
-                    s = 0;
+                    total = 0;
                     for k = 1:kernelSize
                         for l = 1:kernelSize
-                            s = s + imagePaddedDouble(i-padding+k-1, j-padding+l-1, chan) * gKernel(k, l);
+                            total = total + imagePaddedDouble(i-padding+k-1, j-padding+l-1, chan) * gKernel(k, l);
                         end
                     end
-                    imageFilteredDouble(i-padding, j-padding, chan) = s;
+                    imageFilteredDouble(i-padding, j-padding, chan) = total;
                 end
             end
         end
@@ -84,15 +84,15 @@ switch filterType
         for chan = 1:chans
             for i = (1+lapPad):(rows+lapPad)
                 for j = (1+lapPad):(cols+lapPad)
-                    s = 0;
+                    total = 0;
                     for k = 1:3
                         for l = 1:3
-                            s = s + lapPadded(i-lapPad+k-1, j-lapPad+l-1, chan) * lapKernel(k, l);
+                            total = total + lapPadded(i-lapPad+k-1, j-lapPad+l-1, chan) * lapKernel(k, l);
                         end
                     end
                     % sharpen: add scaled Laplacian back to original
                     imageFilteredDouble(i-lapPad, j-lapPad, chan) = ...
-                        imageDoubleFull(i-lapPad, j-lapPad, chan) + sharpenAlpha * s;
+                        imageDoubleFull(i-lapPad, j-lapPad, chan) + sharpenAlpha * total;
                 end
             end
         end
@@ -117,14 +117,6 @@ switch filterType
 
 end
 
-% manual rescale to [0,255] (replaces rescale())
-minVal = min(imageFilteredDouble(:));
-maxVal = max(imageFilteredDouble(:));
-if maxVal > minVal
-    rescaledMatrix = (imageFilteredDouble - minVal) / (maxVal - minVal) * 255;
-else
-    rescaledMatrix = imageFilteredDouble;
-end
-imageFiltered = uint8(rescaledMatrix);
+imageFiltered = uint8(max(0, min(255, imageFilteredDouble)));
 outputArg1 = imageFiltered;
 end

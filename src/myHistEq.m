@@ -8,7 +8,7 @@ else % Citra RGB
     V_uint8 = uint8(round(hsv(:,:,3) * 255.0));
     V_eq = eqSingleChannel(V_uint8);
     hsv(:,:,3) = double(V_eq) / 255.0;
-    J = im2uint8(hsv2rgb(hsv));
+    J = uint8(round(hsv2rgb(hsv) * 255));
 end
 
 end

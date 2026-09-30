@@ -8,17 +8,16 @@ switch type
         % Citra negatif : s = 255 - r
         J_double = 255 - I_double;
 
-    case 'Log Transform'
-        % Transformasi log : s = c * log(1 + s)
-        J_double = c * log(1 + I_double);
-        if max(J_double(:)) > 0
-            J_double = (J_double/max(J_double(:))) * 255;
-        end
-
     case 'Gamma (Power-law)'
         % Transformasi gamma : s = c * (r / 255)^gamma * 255
         I_norm = I_double / 255.0;
         J_double = c * (I_norm .^ gamma) * 255.0;
+
+    case 'Log Transform'
+        % Transformasi log : s = c * log(1 + s)
+        I_norm = I_double/255.0; % Normalize I to [0.0, 1.0]
+        J_norm = c * (log(1 + I_norm) / log(2));
+        J_double = J_norm * 255.0;
 
     case 'Linear Stretch'
         % Contrast stretching linear

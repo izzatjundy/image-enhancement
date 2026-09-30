@@ -94,10 +94,12 @@ The application features a clean, tab-based interface:
 
 - `src/`: Contains the core MATLAB source code.
   - `ImageEnhancementApp.m`: Main application class and UI.
-  - `myFilter.m`: Custom image filtering functions (convolution, averaging, Gaussian, sharpening, median).
-  - `myHist.m`: Histogram calculation utility.
-  - `myHistEq.m`: Histogram equalization utility.
-  - `myHistSpec.m`: Histogram specification utility.
+  - `myIntensityTransform.m`: Intensity transformation functions (Negative, Gamma, Log, Linear Stretch).
+  - `myHist.m`: Custom histogram calculation (replaces `imhist`).
+  - `myHistEq.m`: Histogram equalization (replaces `histeq`).
+  - `myHistSpec.m`: Histogram specification/matching (replaces `imhistmatch`).
+  - `myFilter.m`: Image filtering — Averaging, Gaussian, Laplacian sharpening, Median (replaces `imfilter`/`medfilt2`).
+  - `imgFeatures.m`: Computes per-channel image statistics (min, max, mean, std, entropy).
 
 - `data/`: Contains the dataset folders and images used for testing.
 

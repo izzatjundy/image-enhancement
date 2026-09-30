@@ -359,7 +359,7 @@ classdef ImageEnhancementApp < handle
             sel = app.FolderDropdown.Value;
             if isempty(sel), return; end
 
-            if strcmp(sel, '[Browse...] Pilih folder lain')
+            if strcmp(sel, 'Browse other folders...')
                 % Open a folder-picker dialog
                 chosen = uigetdir(app.DataRoot, 'Pilih Folder Citra');
                 if isequal(chosen, 0)
